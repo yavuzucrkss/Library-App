@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import BookModel from "../../models/BookModel";
+import { LeaveAReview } from "../Utils/LeaveAReview";
 
 export const CheckoutAndReviewBox: React.FC<{
     book: BookModel | undefined, mobile: boolean,
-    currentLoansCount: number, isAuthenticated: any, isBookCheckOut: boolean, checkOutBook: any
+    currentLoansCount: number, isAuthenticated: any, isBookCheckOut: boolean,
+    checkOutBook: any, isReviewLeft: boolean, submitReview: any
 }> = (props) => {
 
     function buttonReader() {
@@ -21,7 +23,19 @@ export const CheckoutAndReviewBox: React.FC<{
         return (<Link to='/login' typeof="button" className='btn btn-success btn-lg'>Sign in</Link>)
     }
 
-
+    function reviewReader() {
+        if (props.isAuthenticated && !props.isReviewLeft && props.isBookCheckOut) {
+            return (<LeaveAReview submitReview={props.submitReview}/>)
+        }
+        else if (props.isAuthenticated && props.isReviewLeft) {
+            return (<p><b>Thanks for your review</b></p>)
+        }
+        else if (!props.isAuthenticated) {
+        return (<p>
+            Sign in to be able to leave a review.
+        </p>)
+        }
+    }
     return (
         <div className={props.mobile ? 'card d-flex mt-5' : 'card col-3 container d-flex mb-5'}>
             <div className='card-body container'>
@@ -56,11 +70,8 @@ export const CheckoutAndReviewBox: React.FC<{
                 <p className='mt-3'>
                     This number can change until placing order has been complete.
                 </p>
-                {props.isAuthenticated ? <></> :
-                    <p>
-                        Sign in to be able to leave a review.
-                    </p>
-                }
+                <hr />
+                {reviewReader()}
 
             </div>
         </div>
