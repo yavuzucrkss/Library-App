@@ -18,7 +18,7 @@ import com.example.springbootlibrary.utils.ExtractJWT;
 
 
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://localhost:3000")
 @RestController
 @RequestMapping("/api/books")
 public class BookController {

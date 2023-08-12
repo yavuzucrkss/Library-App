@@ -30,7 +30,7 @@ export const ReviewListPage = () => {
 
         const fetchBooks = async () => {
             // fetchBooks fonksiyonu, kitapları API'den almak için async/await kullanarak asenkron bir işlevdir.
-            const baseUrl: string = `http://localhost:8080/api/books/${bookId}`;
+            const baseUrl: string = `{${process.env.REACT_APP_API}/books/${bookId}`;
 
 
             const response = await fetch(baseUrl);
@@ -77,7 +77,7 @@ export const ReviewListPage = () => {
     useEffect(() => {
         const fetchBookReviewsData = async () => {
 
-            const reviewUrl: string = `http://localhost:8080/api/reviews/search/findByBookId?bookId=${bookId}&page=${currentPage - 1}&size=${reviewsPerPage}`;
+            const reviewUrl: string = `${process.env.REACT_APP_API}/reviews/search/findByBookId?bookId=${bookId}&page=${currentPage - 1}&size=${reviewsPerPage}`;
 
             const responseReviews = await fetch(reviewUrl);
 

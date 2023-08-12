@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 export const Heros = () => {
 
-    const {authState} = useOktaAuth()
+    const { authState } = useOktaAuth()
 
-    
+
     return (
         <div>
             <div className='d-none d-lg-block'>
@@ -21,10 +21,10 @@ export const Heros = () => {
                                 Whether it is to learn a new skill or grow within one,
                                 we will be able to provide the top content for you!
                             </p>
-                            { authState?.isAuthenticated ? 
-                            <Link type='button' className='btn main-color btn-lg text-white' to='/search'>Explore Books</Link>
-                            :
-                            <Link type='button' className='btn main-color btn-lg text-white' to='/login'>Sign up</Link>
+                            {authState?.isAuthenticated ?
+                                <Link type='button' className='btn main-color btn-lg text-white' to='/search'>Explore Books</Link>
+                                :
+                                <Link type='button' className='btn main-color btn-lg text-white' to='/login'>Sign up</Link>
                             }
                         </div>
                     </div>
@@ -61,10 +61,10 @@ export const Heros = () => {
                                 Whether it is to learn a new skill or grow within one,
                                 we will be able to provide the top content for you!
                             </p>
-                            { authState?.isAuthenticated ? 
-                            <Link type='button' className='btn main-color btn-lg text-white' to='/search'>Explore Books</Link>
-                            :
-                            <Link type='button' className='btn main-color btn-lg text-white' to='/login'>Sign up</Link>
+                            {authState?.isAuthenticated ?
+                                <Link type='button' className='btn main-color btn-lg text-white' to='/search'>Explore Books</Link>
+                                :
+                                <Link type='button' className='btn main-color btn-lg text-white' to='/login'>Sign up</Link>
                             }
                         </div>
                     </div>

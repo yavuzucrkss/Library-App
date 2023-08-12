@@ -7,12 +7,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import com.example.springbootlibrary.entity.Book;
+import com.example.springbootlibrary.entity.History;
+import com.example.springbootlibrary.entity.Message;
 import com.example.springbootlibrary.entity.Review;
+
 
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
-        private String theAllowedOrigins = "http://localhost:3000";
+        private String theAllowedOrigins = "https://localhost:3000";
 
         // configureRepositoryRestConfiguration methodu üzerinden Spring Data REST
         // yapılandırmasını yaparız.
@@ -31,10 +34,13 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
                 // erişebilir.
                 config.exposeIdsFor(Book.class);
                 config.exposeIdsFor(Review.class);
+                config.exposeIdsFor(History.class);
+                config.exposeIdsFor(Message.class);
 
                 // Book entity sınıfı için belirtilen HTTP metotlarını devre dışı bırakırız.
                 disableHttpMethods(Book.class, config, theUnsupportedActions);
                 disableHttpMethods(Review.class, config, theUnsupportedActions);
+                disableHttpMethods(Message.class, config, theUnsupportedActions);
 
                 /* CORS Mapping yapılandırması */
                 // CORS (Cross-Origin Resource Sharing) yapılandırması ekleyerek, istemci

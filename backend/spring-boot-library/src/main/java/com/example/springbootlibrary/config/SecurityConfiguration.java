@@ -22,7 +22,7 @@ public class SecurityConfiguration {
         // Protect endpoints at (api/<type>/secure)
         http.authorizeRequests(configurer -> 
         configurer
-            .antMatchers("/api/books/secure/**", "/api/reviews/secure/**")
+            .antMatchers("/api/books/secure/**", "/api/reviews/secure/**","/api/messages/secure/**", "/api/admin/secure/**")
             .authenticated())
         .oauth2ResourceServer()
         .jwt();

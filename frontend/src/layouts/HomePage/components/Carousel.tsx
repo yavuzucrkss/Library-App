@@ -18,7 +18,7 @@ export const Carousel = () => {
         const fetchBooks = async () => {
             // fetchBooks fonksiyonu, kitapları API'den almak için async/await kullanarak asenkron bir işlevdir.
 
-            const baseUrl: string = 'http://localhost:8080/api/books';
+            const baseUrl: string = `${process.env.REACT_APP_API}/books`;
             const url: string = `${baseUrl}?page=0&size=9`;
 
             // API'den kitapları almak için istek yapılacak olan URL oluşturuluyor.

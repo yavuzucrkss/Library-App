@@ -13,7 +13,7 @@ import com.example.springbootlibrary.requestmodels.ReviewRequest;
 import com.example.springbootlibrary.service.ReviewService;
 import com.example.springbootlibrary.utils.ExtractJWT;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("https://localhost:3000")
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {

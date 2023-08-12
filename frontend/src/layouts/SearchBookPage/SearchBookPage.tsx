@@ -26,7 +26,7 @@ export const SearchBookPage = () => {
         const fetchBooks = async () => {
 
             // API'den kitapları almak için istek yapılacak olan URL oluşturuluyor.
-            const baseUrl: string = 'http://localhost:8080/api/books';
+            const baseUrl: string = `${process.env.REACT_APP_API}/books`;
             let url: string;
 
             if (searchUrl === '') {
