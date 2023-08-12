@@ -10,12 +10,13 @@ export const Loans = () => {
     const { authState } = useOktaAuth();
     const [httpError, setHttpError] = useState(null);
 
-    //curent
+    //curent loans
     const [shelfCurrentLoans, setShelfCurrentLoans] = useState<ShelfCurrentLoans[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [checkout, setCheckout] = useState(false);
 
     useEffect(() => {
-        const fetchShelfCurrentLoans = async () => {
+        const fetchUserCurrentLoans = async () => {
             if (authState && authState.isAuthenticated) {
                 const url = `http://localhost:8080/api/books/secure/currentloans`;
                 const requestOptions = {
@@ -24,22 +25,22 @@ export const Loans = () => {
                         Authorization: `Bearer ${authState.accessToken?.accessToken}`,
                         'Content-Type': 'application/json'
                     }
-                }
-                const response = await fetch(url, requestOptions);
-                if (!response.ok) {
+                };
+                const shelfCurrentLoansResponse = await fetch(url, requestOptions);
+                if (!shelfCurrentLoansResponse.ok) {
                     throw new Error('Something went wrong!');
                 }
-                const shelfCurrentLoans = await response.json();
-                setShelfCurrentLoans(shelfCurrentLoans);
+                const shelfCurrentLoansResponseJson = await shelfCurrentLoansResponse.json();
+                setShelfCurrentLoans(shelfCurrentLoansResponseJson);
             }
             setIsLoading(false);
         }
-        fetchShelfCurrentLoans().catch((error: any) => {
-            setHttpError(error.message);
+        fetchUserCurrentLoans().catch((error: any) => {
             setIsLoading(false);
-        });
+            setHttpError(error.message);
+        })
         window.scrollTo(0, 0);
-    }, [authState]);
+    }, [authState, checkout]);
 
     if (isLoading) {
         return (<SpinnerLoading />);
@@ -48,6 +49,41 @@ export const Loans = () => {
     if (httpError) {
         return (<div className="container m-5">{httpError}</div>);
     }
+
+    async function returnBook(bookId: number) {
+        const url = `http://localhost:8080/api/books/secure/return/?bookId=${bookId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+        const returnResponse = await fetch(url, requestOptions);
+        if (!returnResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setCheckout(!checkout);
+    }
+
+    async function  renewLoan (bookId:number) {
+        const url = `http://localhost:8080/api/books/secure/renew/loan/?bookId=${bookId}`;
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${authState?.accessToken?.accessToken}`,
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const renewResponse = await fetch(url, requestOptions);
+        if (!renewResponse.ok) {
+            throw new Error('Something went wrong!');
+        }
+        setCheckout(!checkout);
+    }
+
+
     return (
         <div>
             {/* Desktop */}
@@ -107,7 +143,7 @@ export const Loans = () => {
                                     </div>
                                 </div>
                                 <hr />
-                                <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={false} />
+                                <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={false} returnBook={returnBook} renewLoan={renewLoan} />
 
                             </div>
                         ))}
@@ -180,7 +216,7 @@ export const Loans = () => {
                                 </div>
 
                                 <hr />
-                                <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={true} />
+                                <LoansModal shelfCurrentLoan={shelfCurrentLoan} mobile={true} returnBook={returnBook} renewLoan={renewLoan} />
 
                             </div>
                         ))}

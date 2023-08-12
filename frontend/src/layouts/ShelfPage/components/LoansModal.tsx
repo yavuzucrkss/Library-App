@@ -1,7 +1,10 @@
 import ShelfCurrentLoans from "../../../models/ShelfCurrentLoans";
 
-export const LoansModal: React.FC<{ shelfCurrentLoan: ShelfCurrentLoans, mobile: boolean }> = (props) => {
-    
+export const LoansModal: React.FC<{
+    shelfCurrentLoan: ShelfCurrentLoans, mobile: boolean,
+    returnBook: any, renewLoan: any
+}> = (props) => {
+
     return (
         <div className='modal fade' id={props.mobile ? `mobilemodal${props.shelfCurrentLoan.book.id}` :
             `modal${props.shelfCurrentLoan.book.id}`} data-bs-backdrop='static' data-bs-keyboard='false'
@@ -50,11 +53,15 @@ export const LoansModal: React.FC<{ shelfCurrentLoan: ShelfCurrentLoans, mobile:
                                     </p>
                                 }
                                 <div className='list-group mt-3'>
-                                    <button data-bs-dismiss='modal' className='list-group-item list-group-item-action'
+                                    <button onClick={() => props.returnBook(props.shelfCurrentLoan.book.id)} data-bs-dismiss='modal' className='list-group-item list-group-item-action'
                                         aria-current='true'>
                                         Return Book
                                     </button>
-                                    <button data-bs-dismiss='modal'
+                                    <button 
+                                    onClick={ props.shelfCurrentLoan.daysLeft < 0 ?
+                                        (e) => e.preventDefault() :
+                                        () => props.renewLoan(props.shelfCurrentLoan.book.id)} 
+                                        data-bs-dismiss='modal'
                                         className={
                                             props.shelfCurrentLoan.daysLeft < 0 ?
                                                 'list-group-item list-group-item-action inactiveLink' :
