@@ -1,2 +1,2 @@
 # Library-App
-Some kind of library application. Developed with react and spring boot
+It's a kind of fullstack library application. Developed with React and spring boot with the training of the Luv2Code team
