@@ -32,6 +32,8 @@ export const BookCheckoutPage = () => {
     const [isBookCheckOut, setIsBookCheckOut] = useState(false);
     const [isLoadingBookCheckOut, setIsLoadingBookCheckOut] = useState(true);
 
+    //Payment
+    const [displayError, setDisplayError] = useState(false);
 
     const bookId = (window.location.pathname).split('/')[2];
 
@@ -247,8 +249,10 @@ export const BookCheckoutPage = () => {
         }
         const response = await fetch(url, requestOptions);
         if (!response.ok) {
+            setDisplayError(true);
             throw new Error('Something went wrong!');
         }
+        setDisplayError(false);
         setIsBookCheckOut(true);
     }
 
@@ -279,6 +283,10 @@ export const BookCheckoutPage = () => {
         <div>
             {/* Desktop */}
             <div className='container d-none d-lg-block'>
+                {displayError && <div className="alert alert-danger mt-3" role="alert">
+                    Please pay outstanding fees and/or return late book(s).
+                </div>
+                }
                 <div className='row mt-5'>
                     <div className='col-sm-2 col-md-2 mt-3 d-flex flex-column align-items-center '>
                         {book?.img ?
@@ -299,7 +307,7 @@ export const BookCheckoutPage = () => {
                         </div>
                     </div>
                     <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount}
-                        isAuthenticated={authState?.isAuthenticated} isBookCheckOut={isBookCheckOut} 
+                        isAuthenticated={authState?.isAuthenticated} isBookCheckOut={isBookCheckOut}
                         checkOutBook={checkOutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} />
                 </div>
                 <hr />
@@ -317,6 +325,10 @@ export const BookCheckoutPage = () => {
                     }
 
                 </div>
+                {displayError && <div className="alert alert-danger mt-3" role="alert">
+                    Please pay outstanding fees and/or return late book(s).
+                </div>
+                }
                 <div className='d-flex justify-content-center align-items-center mt-3'>
                     < StarsReview rating={totalStars} size={32} />
                 </div>
@@ -328,8 +340,8 @@ export const BookCheckoutPage = () => {
                     </div>
                 </div>
                 <CheckoutAndReviewBox book={book} mobile={false} currentLoansCount={currentLoansCount}
-                        isAuthenticated={authState?.isAuthenticated} isBookCheckOut={isBookCheckOut} 
-                        checkOutBook={checkOutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} />
+                    isAuthenticated={authState?.isAuthenticated} isBookCheckOut={isBookCheckOut}
+                    checkOutBook={checkOutBook} isReviewLeft={isReviewLeft} submitReview={submitReview} />
                 <hr />
                 <LatestReviews reviews={reviews} bookId={book?.id} mobile={true} />
             </div>

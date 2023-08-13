@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import com.example.springbootlibrary.dao.PaymentRepository;
+import com.example.springbootlibrary.entity.Payment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +28,14 @@ public class BookService {
     private BookRepository bookRepository;
     private CheckoutRepository checkoutRepository;
     private HistoryRepository historyRepository;
+    private PaymentRepository paymentRepository;
 
-    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository, HistoryRepository historyRepository) {
+    public BookService(BookRepository bookRepository, CheckoutRepository checkoutRepository,
+            HistoryRepository historyRepository, PaymentRepository paymentRepository) {
         this.bookRepository = bookRepository;
         this.checkoutRepository = checkoutRepository;
         this.historyRepository = historyRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     // Kitap ödünç almayı yöneten metot
@@ -47,6 +52,40 @@ public class BookService {
         // ödünç almışsa, hata fırlatılır
         if (!book.isPresent() || book.get().getCopies() <= 0 || validateCheckout != null) {
             throw new Exception("Book not available or already checked out");
+        }
+
+
+        List<Checkout> checkoutList = checkoutRepository.findByUserEmail(userEmail);
+
+        SimpleDateFormat sdfFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        boolean bookNeedsReturn = false;
+
+        for (Checkout checkout : checkoutList) {
+            Date d1 = sdfFormat.parse(checkout.getReturnDate());
+            Date d2 = sdfFormat.parse(LocalDate.now().toString());
+
+            TimeUnit time = TimeUnit.DAYS;
+
+            double differenceInTime = time.convert(d1.getTime() - d2.getTime(), TimeUnit.MILLISECONDS);
+
+            if (differenceInTime < 0) {
+                bookNeedsReturn = true;
+                break;
+            }
+        }
+
+        Payment userPayment = paymentRepository.findByUserEmail(userEmail);
+
+        if ((userPayment != null && userPayment.getAmount() > 0) || bookNeedsReturn) {
+            throw new Exception("Outstanding fees");
+        }
+
+        if (userPayment == null) {
+            Payment payment = new Payment();
+            payment.setAmount(00.00);
+            payment.setUserEmail(userEmail);
+            paymentRepository.save(payment);
         }
 
         // Kitap stoktan bir adet azaltılır ve güncellenir
@@ -139,6 +178,22 @@ public class BookService {
         book.get().setCopiesAvailable(book.get().getCopiesAvailable() + 1);
 
         bookRepository.save(book.get());
+
+        SimpleDateFormat sdfFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d1 = sdfFormat.parse(validateCheckout.getReturnDate());
+        Date d2 = sdfFormat.parse(LocalDate.now().toString());
+
+        TimeUnit time = TimeUnit.DAYS;
+
+        double differenceInTime = time.convert(d1.getTime() - d2.getTime(), TimeUnit.MILLISECONDS);
+
+        if(differenceInTime < 0) {
+            Payment payment = paymentRepository.findByUserEmail(userEmail);
+            payment.setAmount(payment.getAmount() + (Math.abs(differenceInTime) * 1));
+            paymentRepository.save(payment);
+        }
+
         checkoutRepository.deleteById(validateCheckout.getId());
 
         History history = new History(

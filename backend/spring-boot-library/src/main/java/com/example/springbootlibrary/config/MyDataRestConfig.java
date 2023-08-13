@@ -1,15 +1,11 @@
 package com.example.springbootlibrary.config;
 
+import com.example.springbootlibrary.entity.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-
-import com.example.springbootlibrary.entity.Book;
-import com.example.springbootlibrary.entity.History;
-import com.example.springbootlibrary.entity.Message;
-import com.example.springbootlibrary.entity.Review;
 
 
 @Configuration
@@ -36,12 +32,13 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
                 config.exposeIdsFor(Review.class);
                 config.exposeIdsFor(History.class);
                 config.exposeIdsFor(Message.class);
+                config.exposeIdsFor(Payment.class);
 
                 // Book entity sınıfı için belirtilen HTTP metotlarını devre dışı bırakırız.
                 disableHttpMethods(Book.class, config, theUnsupportedActions);
                 disableHttpMethods(Review.class, config, theUnsupportedActions);
                 disableHttpMethods(Message.class, config, theUnsupportedActions);
-
+                disableHttpMethods(Payment.class, config, theUnsupportedActions);
                 /* CORS Mapping yapılandırması */
                 // CORS (Cross-Origin Resource Sharing) yapılandırması ekleyerek, istemci
                 // tarafından farklı bir orijinden gelen istekleri kabul ederiz.
