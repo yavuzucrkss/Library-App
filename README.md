@@ -13,7 +13,6 @@ It's a kind of fullstack library application. Developed with React and spring bo
 ![image](https://github.com/user-attachments/assets/d2413f1c-8f0a-4b8d-b950-932e7861270a)
 
 
-![image](https://github.com/user-attachments/assets/5af77df2-f111-43c7-aa26-3e481a34a1f4)
 
 
 
